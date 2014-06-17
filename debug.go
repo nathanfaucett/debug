@@ -75,7 +75,6 @@ func (this *debug) timeDifference() string {
 	if last == 0 {
 		last = current
 	}
-	fmt.Println(last, current)
 	ms := current - last
 	prev[this.name] = current
 	
