@@ -70,11 +70,12 @@ func newDebug(name string) *debug {
 }
 
 func (this *debug) timeDifference() string {
-	current := time.Now().Unix()
+	current := time.Now().UnixNano() / 1e6
 	last := prev[this.name]
 	if last == 0 {
 		last = current
 	}
+	fmt.Println(last, current)
 	ms := current - last
 	prev[this.name] = current
 	
