@@ -1,7 +1,7 @@
-Debugger
+Debugger.go
 =====
 
-Debugger is simple debug function that returns a struct for debugging if env GO_ENVIRONMENT_NAME = Dev or Development
+Debugger.go is simple debug function that returns a struct for debugging if env GO_ENVIRONMENT_NAME = Dev or Development
 
 ##Example
 ```
