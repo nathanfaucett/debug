@@ -1,4 +1,4 @@
-package debugger
+package debug
 
 import (
 	"fmt"
@@ -21,7 +21,8 @@ var (
 		37, // white
 		38,
 	}
-	prevColor = 0
+	colorsLength = len(colors)
+	prevColor    = 0
 )
 
 func stylize(str string, color int) string {
@@ -29,7 +30,7 @@ func stylize(str string, color int) string {
 }
 
 func color() int {
-	c := colors[prevColor%len(colors)]
+	c := colors[prevColor%colorsLength]
 	prevColor++
 	return c
 }
@@ -51,7 +52,7 @@ func humanize(ms int64) string {
 type debugInterface interface {
 	Log(string)
 	Warning(string)
-	Error(string)
+	Error(msg interface{})
 }
 
 type debug struct {
@@ -85,8 +86,16 @@ func (this *debug) Warning(msg string) {
 	fmt.Println(stylize(this.name, this.color) + stylize(" Warning: "+msg, 33) + stylize(" +"+this.timeDifference(), this.color))
 }
 
-func (this *debug) Error(msg string) {
-	fmt.Println(stylize(this.name, this.color) + stylize(" Error: "+msg, 31) + stylize(" +"+this.timeDifference(), this.color))
+func (this *debug) Error(msg interface{}) {
+	var out string
+
+	if err, ok := msg.(error); ok {
+		out = err.Error()
+	} else if str, ok := msg.(string); ok {
+		out = str
+	}
+
+	fmt.Println(stylize(this.name, this.color) + stylize(" Error: "+out, 31) + stylize(" +"+this.timeDifference(), this.color))
 }
 
 type emptyDebug struct{}
@@ -96,10 +105,15 @@ func newEmptyDebug() *emptyDebug {
 	return this
 }
 
-func (this *emptyDebug) Log(msg string)     {}
-func (this *emptyDebug) Warning(msg string) {}
-func (this *emptyDebug) Error(msg string)   {}
+func (this *emptyDebug) Log(msg string)        {}
+func (this *emptyDebug) Warning(msg string)    {}
+func (this *emptyDebug) Error(msg interface{}) {}
 
+// returns new Debug pointer if GO_ENVIRONMENT_NAME == Development or Dev
+// methods are
+//    Log(string)
+//    Warning(string)
+//    Error(interface{}) accepts an error interface or string
 func Debug(name string) debugInterface {
 	env := os.Getenv("GO_ENVIRONMENT_NAME")
 
