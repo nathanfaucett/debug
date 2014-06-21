@@ -1,7 +1,7 @@
-Debug.go
+Debugger.go
 =====
 
-Debug.go is simple debug function that returns a struct for debugging
+Debugger.go is simple debug function that returns a struct for debugging
 if env's GO_ENVIRONMENT_NAME = Dev or Development
 
 ##Example
@@ -9,11 +9,11 @@ if env's GO_ENVIRONMENT_NAME = Dev or Development
 package main
 
 import (
-	"github.com/nathanfaucett/debug"
+	"github.com/nathanfaucett/debugger"
 	"errors"
 )
 
-var debug = debug.Debug("WebApp")
+var debug = debugger.Debug("WebApp")
 
 func main() {
 	debug.Log("Main Function Called")
